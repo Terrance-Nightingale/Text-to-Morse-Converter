@@ -1,6 +1,7 @@
-from game_master import TicTacToe
+import game_master as gm
 
-new_game = TicTacToe()
+new_game = gm.TicTacToe()
 
-new_game.player_move()
+print(new_game.game_board)
 new_game.comp_move()
+print(new_game.game_board)
