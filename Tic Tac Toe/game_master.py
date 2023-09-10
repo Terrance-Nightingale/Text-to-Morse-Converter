@@ -19,26 +19,20 @@ class TicTacToe:
     def player_move(self):
         can_move = False
         try:
-            chosen_pos = int(input("Please make your move by typing a number from 1-9 "
-                                   "(whole numbers only): ")) - 1
-            if chosen_pos in range(0, 9):
-                can_move = True
-                self.positions[chosen_pos] = "X"
-                self.update_board()
-            else:
-                raise ValueError
+            chosen_pos = int(input("Please make your move by typing in a number from 1-9 "
+                                        "(whole numbers only): ")) - 1
+            can_move = True
+            self.positions[chosen_pos] = "X"
+            self.update_board()
         except ValueError:
             while not can_move:
                 try:
-                    chosen_pos = int(input("Incorrect input. Please make your move by typing a number from 1-9 "
-                                           "(whole numbers only): ")) - 1
-                    if chosen_pos in range(0, 9):
-                        can_move = True
-                        print(chosen_pos)
-                        self.positions[chosen_pos] = "X"
-                        self.update_board()
-                    else:
-                        raise ValueError
+                    chosen_pos = int(input("Incorrect input. Please make your move by typing in a number from 1-9 "
+                                                "(whole numbers only): ")) - 1
+                    can_move = True
+                    self.positions[chosen_pos] = "X"
+                    self.update_board()
+
                 except ValueError:
                     pass
 
