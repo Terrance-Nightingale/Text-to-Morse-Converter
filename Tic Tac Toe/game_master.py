@@ -1,7 +1,6 @@
 from random import randint
 from time import sleep
 
-
 class TicTacToe:
 
     def __init__(self):
