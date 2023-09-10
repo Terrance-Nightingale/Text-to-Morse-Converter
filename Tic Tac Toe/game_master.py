@@ -57,13 +57,12 @@ class TicTacToe:
         print("Computer is thinking...")
         sleep(2)
         chosen_pos = randint(0, len(self.positions) - 1)
-        print(f"Computer's move: Position {chosen_pos + 1}")
         can_move = False
         while not can_move:
             if self.positions[chosen_pos] not in self.approved_moves:
                 chosen_pos = randint(0, len(self.positions) - 1)
-                print(f"Chosen comp position now = {chosen_pos + 1}")
             else:
+                print(f"Computer's move: Position {chosen_pos + 1}")
                 can_move = True
         self.positions[chosen_pos] = "O"
         self.update_board()
@@ -82,49 +81,79 @@ class TicTacToe:
 
     def check_winner(self):
         #--- Check columns ---#
-        self.player_score = 0
-        self.comp_score = 0
-        for row in self.board_state:
-            if row[0] == "X":
-                self.player_score += 1
-            elif row[0] == "O":
-                self.comp_score += 1
-            else:
-                continue
-        if self.player_score == 3 or self.comp_score == 3:
-            self.playing = False
-            self.declare_winner()
-            return
+        self.reset_score()
+        for column in range(0, 3):
+            for row in self.board_state:
+                if row[column] == "X":
+                    self.player_score += 1
+                elif row[column] == "O":
+                    self.comp_score += 1
+                if self.player_score == 3 or self.comp_score == 3:
+                    self.playing = False
+                    self.declare_winner()
+                    return
+            self.reset_score()
 
         #--- Check rows ---#
-        self.player_score = 0
-        self.comp_score = 0
+        self.reset_score()
         for row in self.board_state:
             for symbol in row:
                 if symbol == "X":
                     self.player_score += 1
                 elif symbol == "O":
                     self.comp_score += 1
-                else:
-                    continue
+            if self.player_score == 3 or self.comp_score == 3:
+                self.playing = False
+                self.declare_winner()
+                return
+            self.reset_score()
+
+        #--- Check diagonals ---#
+        self.reset_score()
+        pos_to_check = 0
+        for row in self.board_state:
+            if row[pos_to_check] == "X":
+                self.player_score += 1
+            elif row[pos_to_check] == "O":
+                self.comp_score += 1
+            pos_to_check += 1
         if self.player_score == 3 or self.comp_score == 3:
             self.playing = False
             self.declare_winner()
             return
 
-        #--- Check diagonals ---#
-        # starting_pos = 0
-        # for row in self.board_state:
-        #     row[starting_pos]
+        self.reset_score()
+        pos_to_check = 0
+        for row in reversed(self.board_state):
+            if row[pos_to_check] == "X":
+                self.player_score += 1
+            elif row[pos_to_check] == "O":
+                self.comp_score += 1
+            pos_to_check += 1
+        if self.player_score == 3 or self.comp_score == 3:
+            self.playing = False
+            self.declare_winner()
+            return
+        self.declare_winner()
 
     def declare_winner(self):
         #--- Return winner if any ---#
+        draw = False
         if self.player_score == 3:
             print("Congratulations! You win!")
             self.play_again()
         elif self.comp_score == 3:
             print("You lose.")
             self.play_again()
+        else:
+            for value in self.positions:
+                if value not in self.approved_moves:
+                    draw = True
+                else:
+                    draw = False
+            if draw:
+                print("It's a draw.")
+                self.play_again()
 
     def play_again(self):
         legal_choices = ("Y", "N")
@@ -137,3 +166,7 @@ class TicTacToe:
         elif choice == "N":
             print("Thank you for playing!")
             self.playing = False
+
+    def reset_score(self):
+        self.player_score = 0
+        self.comp_score = 0
