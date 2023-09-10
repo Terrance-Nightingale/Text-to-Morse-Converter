@@ -1,5 +1,5 @@
 from game_master import TicTacToe
 
-game = TicTacToe()
+new_game = TicTacToe()
 
-game.play_game()
+new_game.play_game()
