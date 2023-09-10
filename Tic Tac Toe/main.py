@@ -1,5 +1,4 @@
 import game_master as gm
 
-new_game = gm.TicTacToe()
+new_game = gm()
 
-print(new_game.game_board)
