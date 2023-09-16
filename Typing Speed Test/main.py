@@ -1,7 +1,7 @@
 from tkinter import *
-import time
 import math
 
+SECONDS = 60
 timer = None
 sample = "\"Studying is the main source of knowledge. Books are indeed never failing friends of man. " \
          "For a mature mind, reading is the greatest source of pleasure and solace to distressed minds. " \
@@ -18,9 +18,21 @@ sample = "\"Studying is the main source of knowledge. Books are indeed never fai
 
 
 def start_timer():
+    count_down(SECONDS)
 
-    seconds = 60
-    count_down(seconds)
+
+def restart_timer():
+    speed_result.config(text="Result: 0 wmp")
+    canvas.itemconfig(timer_text, text="1:00")
+    test_entry.delete("1.0", "end")
+    window.after_cancel(timer)
+
+
+def count_words():
+    input = test_entry.get('1.0', 'end-1c')
+    words = input.split(" ")
+    wpm = len(words)
+    speed_result.config(text=f"Result: {wpm} wpm")
 
 
 def count_down(count):
@@ -34,11 +46,13 @@ def count_down(count):
     if count > 0:
         global timer
         timer = window.after(1000, count_down, count - 1)
+    else:
+        count_words()
 
 
 window = Tk()
 window.title("Typing Speed Test App")
-window.minsize(width=600, height=500)
+window.minsize(width=800, height=500)
 window.config(padx=50, pady=20)
 
 title_label = Label(text="Test your typing speed! Type the following within 1 minute: ", font=("Ariel", 15, "bold"))
@@ -49,16 +63,25 @@ sample_label.config(wraplength=500, anchor="e", justify="left", pady=10, padx=10
 sample_label.pack()
 
 test_entry = Text(width=50, height=15)
-test_entry.pack()
+test_entry.pack(side="right", pady=30, padx=30)
 test_entry.focus()
 
-canvas = Canvas(width=200, height=120, highlightthickness=0)
+timer_frame = Frame()
+timer_frame.pack(side="left")
+
+canvas = Canvas(timer_frame, width=200, height=120, highlightthickness=0)
 timer_title = canvas.create_text(100, 50, text="Timer", font=("Courier", 24, "bold"))
 timer_text = canvas.create_text(100, 100, text="1:00", font=("Courier", 35, "bold"))
 canvas.pack()
 
-start_btn = Button(text="Start", font=("Courier", 24, "bold"), command=start_timer)
+start_btn = Button(timer_frame, text="Start", width=8, font=("Courier", 24, "bold"), command=start_timer)
 start_btn.pack()
-# Insert speed result below timer
+
+restart_btn = Button(timer_frame, text="Restart", width=8, font=("Courier", 24, "bold"), command=restart_timer)
+restart_btn.pack()
+
+speed_result = Label(timer_frame, text="Result: 0 wpm", font=("Courier", 24, "bold"), fg="green")
+speed_result.config(pady=15, padx=15)
+speed_result.pack(side="bottom")
 
 window.mainloop()
